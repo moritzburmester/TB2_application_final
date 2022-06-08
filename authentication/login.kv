@@ -1,0 +1,132 @@
+<Content1>
+    spacing: "12dp"
+    size_hint_y: None
+    height: "60dp"
+
+    MDTextField:
+        id: resemail
+        hint_text: "Email"
+
+<Content2>
+    spacing: "12dp"
+    size_hint_y: None
+    height: "120dp"
+    orientation: 'vertical'
+
+    MDTextField:
+        id: actioncode
+        hint_text: "Code"
+
+    MDTextField:
+        id: newpassword
+        hint_text: "New Password"
+        password: True
+
+<LogInScreen>:
+
+    MDToolbar:
+        pos_hint: {"top": 1}
+        title: "Log in"
+
+    MDBoxLayout:
+
+        orientation: 'vertical'
+        MDBoxLayout:
+
+            padding: [20, 115, 20, 0]
+
+            MDCard:
+
+                orientation: "vertical"
+                radius: dp(25)
+                size_hint: None, None
+                size: "280dp", "150dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.8}
+                FitImage:
+                    radius: [25, 25, 25, 25]
+                    source: "assets/stockphoto1.jpg"
+
+        MDBoxLayout:
+
+            orientation: 'vertical'
+            spacing: dp(20)
+            padding: [0, 0, 0, 120]
+
+            MDTextFieldRound:
+
+                id: email
+                normal_color: 1, 1, 1, 0.5
+                hint_text: "Email"
+                icon_right: "email"
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x": 0.5}
+
+
+            MDTextFieldRound:
+
+                id: password
+                icon_right: "eye-off"
+                normal_color: 1, 1, 1, 0.5
+                hint_text: "Password"
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x": 0.5}
+                password: True
+
+            MDBoxLayout:
+
+                padding: [0, 0, 0, 0]
+                pos_hint: {"center_x": 1.05}
+
+                MDTextButton:
+
+                    text: "Forgot Password?"
+                    font_size: 13
+                    color: app.theme_cls.primary_color
+                    on_release: app.my_firebase.reset_password_dialog()
+
+            MDFillRoundFlatButton:
+
+                text: "Log In"
+                font_size: 15
+                pos_hint: {"center_x": 0.5}
+                on_release:
+                    app.spinner_toggle()
+                    app.my_firebase.sign_in(email.text, password.text)
+
+            FloatLayout:
+
+                MDSpinner:
+
+                    id: spinner
+                    active: False
+                    size_hint: None, None
+                    size: dp(46), dp(46)
+                    pos_hint: {'center_x': .5, 'top': .5}
+
+
+
+
+
+
+
+        MDBoxLayout:
+
+            adaptive_height: True
+            padding: [40, 0, 60, 10]
+
+            Label:
+
+                text: "Don't have an account?"
+                color: app.theme_cls.opposite_bg_normal
+
+            MDTextButton:
+                text: "Sign up!"
+                font_size: sp(15)
+                color: app.theme_cls.primary_color
+                on_release: root.manager.current = 'signup'
+
+

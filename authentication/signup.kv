@@ -1,0 +1,105 @@
+<SignUpScreen>:
+
+    MDToolbar:
+
+        pos_hint: {"top": 1}
+        title: "Create an Account"
+        left_action_items: [['arrow-left', lambda x: app.change_screen('login')]]
+
+    MDBoxLayout:
+
+        orientation: 'vertical'
+
+        MDBoxLayout:
+
+            padding: [20, 115, 20, 0]
+
+            MDCard:
+
+                orientation: "vertical"
+                radius: dp(25)
+                size_hint: None, None
+                size: "280dp", "150dp"
+                pos_hint: {"center_x": 0.5, "center_y": 0.8}
+                FitImage:
+                    radius: [25, 25, 25, 25]
+                    source: "assets/stockphoto2.jpg"
+
+        MDBoxLayout:
+
+            orientation: 'vertical'
+            spacing: dp(20)
+            padding: [0, 0, 0, 115]
+
+            MDTextFieldRound:
+
+                id: username
+                normal_color: 1, 1, 1, 0.5
+                hint_text: "Username"
+                icon_right: "account"
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x": 0.5}
+
+            MDTextFieldRound:
+
+                id: email
+                normal_color: 1, 1, 1, 0.5
+                hint_text: "Email"
+                icon_right: "email"
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x": 0.5}
+
+
+            MDTextFieldRound:
+
+                id: password1
+                icon_right: "eye-off"
+                normal_color: 1, 1, 1, 0.5
+                hint_text: "Password"
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x": 0.5}
+                password: True
+
+            MDTextFieldRound:
+
+                id: password2
+                icon_right: "eye-off"
+                normal_color: 1, 1, 1, 0.5
+                hint_text: "Repeat Password"
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x": 0.5}
+                password: True
+
+            MDBoxLayout:
+
+                padding: [0, 0, 0, -60]
+                pos_hint: {"center_x": 0.5, "center_y": 2}
+                spacing: dp(30)
+                orientation: 'vertical'
+
+                MDSpinner:
+                    id: spinner
+                    active: False
+                    size_hint: None, None
+                    size: dp(46), dp(46)
+                    pos_hint: {'center_x': 0.5, 'center_y': 1}
+
+                MDFillRoundFlatButton:
+
+                    text: "Continue"
+                    font_size: 15
+                    pos_hint: {"center_x": 0.5}
+                    on_release:
+                        spinner.active = True
+                        app.my_firebase.sign_up(email.text, username.text, password1.text, password2.text)
+
+
+

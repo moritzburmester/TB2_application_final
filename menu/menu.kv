@@ -1,0 +1,281 @@
+<MenuScreen>:
+
+    BoxLayout:
+
+        orientation:'vertical'
+
+        MDBottomNavigation:
+
+            MDBottomNavigationItem:
+
+                name: 'menu_screen'
+                text: 'home'
+                icon: 'home'
+
+                MDBoxLayout:
+
+                    orientation: 'vertical'
+                    padding: [20, 75, 20, 0]
+
+                    MDBoxLayout:
+
+                        padding: [0, 55, 0, 0]
+
+                        MDCard:
+
+                            orientation: "vertical"
+                            radius: dp(25)
+                            size_hint: None, None
+                            size: "280dp", "150dp"
+                            pos_hint: {"center_x": 0.5, "center_y": 0.8}
+
+                            FitImage:
+
+                                radius: [25, 25, 25, 25]
+                                source: "assets/stockphoto3.png"
+
+                    MDBoxLayout:
+
+                        padding: [80, 0, 0, 80]
+                        spacing: dp(20)
+
+                        MDLabel:
+                            id: today1
+                            text: "03"
+                            font_size: dp(40)
+
+                        MDBoxLayout:
+
+                            orientation: 'vertical'
+
+                            MDLabel:
+                                id: today2
+                                text: "Friday\nJune 2022"
+                                pos_hint: {"center_x": -0.15}
+
+                    MDBoxLayout:
+
+                        padding: [0,0,0,100]
+                        orientation: 'vertical'
+                        spacing: dp(50)
+
+                        MDLabel:
+
+                            id: welcome_label
+                            halign: 'center'
+                            text: ""
+                            font_size: dp(23)
+                            pos_y: 200
+
+                        MDRaisedButton:
+                            md_bg_color: app.theme_cls.primary_color
+                            text: "Start Daily Assessment"
+                            pos_y: 120
+                            pos_hint: {'center_x': .5}
+                            on_release:
+                                app.change_screen('questionnaire1')
+
+                MDNavigationLayout:
+
+                    MDToolbar:
+
+                        pos_hint: {"top": 1}
+                        title: "Home"
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
+
+                    MDNavigationDrawer:
+
+                        id: nav_drawer
+                        swipe_distance: 1
+                        size_hint_x: 0.5
+                        enable_swiping:False
+                        opening_time: 1
+                        closing_time: 1
+                        md_bg_color: app.theme_cls.primary_color
+
+
+                        MDBoxLayout:
+
+                            spacing: dp(8)
+                            padding: dp(8)
+                            orientation: 'vertical'
+
+                            Image:
+
+                                id: usericon
+                                size_hint_x: 1
+                                size_hint_y: 0.5
+                                source: 'assets/animal_icons/cat.png'
+
+                            MDLabel:
+                                id: username
+                                text: "          Moritz"
+                                font_style: 'Subtitle1'
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
+                            MDList:
+
+                                OneLineListItem:
+
+                                    text: "Theme"
+                                    on_release: root.show_theme_picker()
+
+                                OneLineListItem:
+
+                                    text: "Logout"
+                                    on_release: app.my_firebase.log_out()
+
+                            ScrollView:
+
+
+
+            MDBottomNavigationItem:
+
+                name: 'diary_screen'
+                text: 'create'
+                icon: 'pencil'
+
+                MDToolbar:
+
+                    pos_hint: {"top": 1}
+                    title: "Create a Diary Entry"
+
+                MDBoxLayout:
+
+                    padding: [90, 0, 0, 300]
+
+                    MDLabel:
+
+                        id: today3
+                        text: "03"
+                        font_size: dp(40)
+
+                    MDBoxLayout:
+
+                        padding: [10, 0, 0, 0]
+                        orientation: 'vertical'
+
+                        MDLabel:
+
+                            id: today4
+                            text: "Friday\nJune 2022"
+                            pos_hint: {"center_x": -0.15}
+
+
+                MDBoxLayout:
+
+                    padding: [0,0,0,100]
+
+                    canvas:
+
+                        Color:
+
+                            rgba: app.theme_cls.primary_color
+
+                        Line:
+
+                            width: 2
+                            points: (20, 390, 300, 390) #x,y,angle,height
+
+                MDBoxLayout:
+
+                    orientation: 'vertical'
+                    spacing: dp(10)
+                    padding: [20, 170, 20, 20]
+
+                    MDTextFieldRect:
+
+                        font_size: dp(20)
+                        size_hint_y: 0.2
+                        multiline: False
+                        hint_text: "Add a title"
+                        background_normal: 'assets/white.png'
+                        background_active: 'assets/white.png'
+
+
+                    MDTextFieldRect:
+
+                        multiline: True
+                        hint_text: "Write Diary Entry here"
+                        background_normal: 'assets/white.png'
+                        background_active: 'assets/white.png'
+
+                    MDRaisedButton:
+
+                        text: "Save"
+                        font_size: 15
+                        pos_hint: {"center_x": 0.5}
+                        on_release: root.manager.current = 'menu'
+                        md_bg_color: app.theme_cls.primary_color
+
+            MDBottomNavigationItem:
+
+                name: 'archive_screen'
+                text: 'timeline'
+                icon: 'folder'
+
+                MDToolbar:
+
+                    pos_hint: {"top": 1}
+                    title: "View Old Entries"
+
+                MDBoxLayout:
+
+                    padding: [20, 0, 20, 0]
+                    orientation: 'vertical'
+
+                    MDBoxLayout:
+
+                        padding: [40, 0, 40, 0]
+                        spacing: dp(5)
+
+                        MDLabel:
+
+                            id: today5
+                            text: "June"
+                            font_size: dp(30)
+
+                        MDLabel:
+
+                            id: today6
+                            text: "2022"
+                            text_color: 0, 0, 0, 0.5
+                            font_size: dp(30)
+
+
+                        MDIconButton:
+                            pos_hint: {'center_y': 0.5}
+                            icon: 'arrow-down-drop-circle'
+                            on_release: root.show_akdate_picker()
+
+                    ScrollView:
+                        MDList:
+                            id: diary_list
+                            OneLineListItem:
+                                text: "hi"
+
+
+
+            MDBottomNavigationItem:
+
+                name: 'moodchart_screen'
+                text: 'Mood'
+                icon: 'chart-line'
+
+                MDToolbar:
+
+                    pos_hint: {"top": 1}
+                    title: "Monthly Mood Chart"
+
+                MDBoxLayout:
+                    id: box
+
+
+
+
+
+
+
+
+
