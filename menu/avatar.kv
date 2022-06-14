@@ -1,0 +1,84 @@
+<AvatarScreen>:
+    MDToolbar:
+        pos_hint: {"top": 1}
+        title: "Change your avatar"
+    MDGridLayout:
+        rows: 3
+        columns: 3
+        spacing: 10
+        padding: [20, 100, 20, 100]
+
+        MDCard:
+
+            ripple_behavior: True
+            id: card1
+            on_release: app.change_avatar_card_color(1)
+            Image:
+                id: image1
+                source: "assets/animal_icons/whale.png"
+        MDCard:
+            ripple_behavior: True
+            id: card2
+            on_release: app.change_avatar_card_color(2)
+            Image:
+                id: image2
+                source: "assets/animal_icons/bull.png"
+        MDCard:
+            id: card3
+            on_release: app.change_avatar_card_color(3)
+            ripple_behavior: True
+            Image:
+                id: image3
+                source: "assets/animal_icons/cat.png"
+        MDCard:
+            id: card4
+            on_release: app.change_avatar_card_color(4)
+            ripple_behavior: True
+            Image:
+                id: image4
+                source: "assets/animal_icons/chick.png"
+        MDCard:
+            id: card5
+            on_release: app.change_avatar_card_color(5)
+            ripple_behavior: True
+            Image:
+                id: image5
+                source: "assets/animal_icons/crab.png"
+        MDCard:
+            id: card6
+            on_release: app.change_avatar_card_color(6)
+            ripple_behavior: True
+            Image:
+                id: image6
+                source: "assets/animal_icons/fox.png"
+        MDCard:
+            id: card7
+            on_release: app.change_avatar_card_color(7)
+            ripple_behavior: True
+            Image:
+                id: image7
+                source: "assets/animal_icons/hippopotamus.png"
+        MDCard:
+            id: card8
+            on_release: app.change_avatar_card_color(8)
+            ripple_behavior: True
+            Image:
+                id: image8
+                source: "assets/animal_icons/koala.png"
+        MDCard:
+            id: card9
+            on_release: app.change_avatar_card_color(9)
+            ripple_behavior: True
+            Image:
+                id: image9
+                source: "assets/animal_icons/lemur.png"
+
+    MDFillRoundFlatButton:
+        text: "Cancel"
+        pos_hint: {'center_x': .35, 'center_y': .1}
+        on_release: app.change_screen('menu')
+
+    MDFillRoundFlatButton:
+        text: "Submit"
+        pos_hint: {'center_x': .65, 'center_y': .1}
+        on_release: app.change_avatar()

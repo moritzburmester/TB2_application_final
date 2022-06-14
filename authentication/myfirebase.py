@@ -1,3 +1,6 @@
+from datetime import datetime
+from time import strptime
+import pandas as pd
 from kivy.core.window import Window
 import requests
 import json
@@ -6,8 +9,17 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.list import TwoLineListItem
 from kivymd.uix.snackbar import Snackbar
-from kivymd.uix.textfield import MDTextField
+import firebase_admin
+from firebase_admin import firestore
+from firebase_admin import credentials
+
+# initialize firestore
+cred = credentials.Certificate("serviceAccountKey.json")
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 
 class LogInScreen(Screen):
@@ -25,6 +37,7 @@ class Content1(BoxLayout):
 class Content2(BoxLayout):
     pass
 
+
 class MyFirebase:
     dialog1 = None
     dialog2 = None
@@ -32,13 +45,15 @@ class MyFirebase:
     key = "AIzaSyCc3kh6tOV80CMtwpaSEO80d0JUK_9FqdM"
 
     # snackbar messages
+    no_entry = "No entries for this month!"
     failure = "Invalid Data. Please try again."
     signup_success = "Sign Up Successful!"
     signin_success = "Log In Successful!"
+    empty_diary = "Title or Content can't be empty"
 
     def sign_up(self, email, username, password1, password2):
 
-        "Function that takes user input from signup screen and authenticates user with firebase"
+        """Function that takes user input from signup screen and authenticates user with firebase"""
 
         app = App.get_running_app()
 
@@ -57,15 +72,19 @@ class MyFirebase:
 
                 localId = signup_data['localId']
                 idToken = signup_data['idToken']
+
+                # save username,email to a variable in MainAppClass
+                app.email = email
+                app.username = username
                 # save localId to a variable in MainAppClass
                 app.local_id = localId
                 # Save IdToken to variable in MainAppClass
                 app.id_token = idToken
                 # create new key in database from localId
-                my_data = '{"avatar": "man.png", "mood": "", "diary": ""}'
+                my_data = {"username": username, "avatar": "assets/animal_icons/cat.png"}
                 post_request = requests.patch(
                     "https://techbasics2assignment-default-rtdb.europe-west1.firebasedatabase.app/" + localId +
-                    ".json?auth=" + idToken, data=my_data)
+                    ".json?auth=" + idToken, data=json.dumps(my_data))
 
                 # change screen to login if successful
                 app.change_screen('login')
@@ -74,8 +93,12 @@ class MyFirebase:
                 self.snackbar_show(self.signup_success)
 
                 # write username to local file
-                with open("username.txt", "w") as f:
+                with open("credentials/username.txt", "w") as f:
                     f.write(username)
+
+                # write email to local file
+                with open("credentials/email.txt", "w") as f:
+                    f.write(email)
 
                 # Clear userinput
                 app.root.get_screen('signup').ids.username.text = ""
@@ -116,10 +139,17 @@ class MyFirebase:
             app.spinner_toggle
             self.snackbar_show(self.signin_success)
 
+            # save email to mainappclass variable
+            with open("credentials/email.txt", "r") as f:
+                app.email = f.read()
             # change label in menu screen to username
-            with open("username.txt", "r") as f:
+            with open("credentials/username.txt", "r") as f:
                 username = f.read()
             app.root.get_screen('menu').ids.welcome_label.text = f"Hey {username}, how do you feel today?"
+
+            # set menu label to display correct username
+            app.root.get_screen("menu").ids.welcome_label.text = "Welcome, " + username + "!\nHow do you feel today?"
+            app.root.get_screen("menu").ids.username.text = "          " + username
 
             # clear userinput
             app.root.get_screen('login').ids.email.text = ""
@@ -146,10 +176,8 @@ class MyFirebase:
     def confirm_password_reset_dialog(self):
 
         app = App.get_running_app()
-        print("here1")
 
         if not self.dialog2:
-            print("here2")
             self.dialog2 = MDDialog(
                 title="Type in action code:",
                 type="custom",
@@ -172,8 +200,6 @@ class MyFirebase:
         self.dialog2.open()
 
     def confirm_password_reset(self, obj):
-
-
 
         newpassword = self.dialog2.content_cls.ids.newpassword.text
         code = self.dialog2.content_cls.ids.actioncode.text
@@ -239,7 +265,6 @@ class MyFirebase:
 
     def reset_password(self, obj):
 
-
         email = self.dialog1.content_cls.ids.resemail.text
         self.dialog1.content_cls.ids.resemail.text = ""
 
@@ -259,8 +284,6 @@ class MyFirebase:
 
             self.snackbar_show("Invalid email.")
 
-
-
     def snackbar_show(self, string):
 
         """ Function that displays a Snackbar depending on the type of message that is passed."""
@@ -274,3 +297,127 @@ class MyFirebase:
                                        Window.width - (snackbar.snackbar_x * 2)
                                ) / Window.width
         snackbar.open()
+
+    def update_avatar(self, avatar):
+
+        """Function that updates user avatar in firebase database"""
+        app = App.get_running_app()
+        my_data = {"avatar": avatar}
+        localId = app.local_id
+        idToken = app.id_token
+
+        patch_request = requests.patch(
+            "https://techbasics2assignment-default-rtdb.europe-west1.firebasedatabase.app/" + localId +
+            ".json?auth=" + idToken, data=json.dumps(my_data))
+
+    def update_mood(self, value):
+
+        "Function that updates user mood data to firestore"
+
+        app = App.get_running_app()
+
+        # update mood value
+        value = 7 - value
+        email = app.email
+        current_day = datetime.now().strftime('%d')
+        current_month_text_short = datetime.now().strftime('%h')
+        data = {current_month_text_short: {current_day: value}}
+
+        db.collection('mood').document(email).set(data, merge=True)
+
+    def update_plot(self):
+
+        app = App.get_running_app()
+        email = app.email
+        current_month_text_short = datetime.now().strftime('%h')
+
+        # get values
+
+        result = db.collection('mood').document(email).get()
+        if result.exists:
+            mood_dict = result.to_dict()[current_month_text_short]
+
+            # format dictionary
+            x = list(mood_dict.keys())
+            y = list(mood_dict.values())
+            d = {'x': x, 'y': y}
+            df = pd.DataFrame(d)
+            print(df)
+
+            return df
+
+    def send_diary(self, title, content):
+
+        """Function that sends diary title and content to firestore database when User hits submit"""
+        if title.text == "" or content.text == "":
+            self.snackbar_show(self.empty_diary)
+        else:
+            app = App.get_running_app()
+            email = app.email
+            current_day = datetime.now().strftime('%d')
+            current_month_text_short = datetime.now().strftime('%h')
+            data = {current_month_text_short: {current_day: [{'Title': title.text}, {'Content': content.text}]}}
+
+            db.collection('diary').document(email).set(data, merge=True)
+
+    def get_diary(self, month):
+
+        """Function that gets data from diary database"""
+        app = App.get_running_app()
+        email = app.email
+
+        result = db.collection('diary').document(email).get()
+        if result.exists:
+            if month in result.to_dict():
+                diary_dict = result.to_dict()[month]
+                length = len(list(diary_dict.keys()))
+                days = [x for x in diary_dict]
+                titles = [x['Title'] for x in [x[0] for x in [diary_dict[x] for x in days]]]
+                content = [x['Content'] for x in [x[1] for x in [diary_dict[x] for x in days]]]
+
+                return length, titles, days, content
+
+            else:
+                return False
+
+    def refresh_diary(self, month):
+        app = App.get_running_app()
+        if not self.get_diary(month):
+            self.snackbar_show(self.no_entry)
+            app.root.get_screen('menu').ids.diary_list.clear_widgets()
+        else:
+            length, titles, days, content = self.get_diary(month)
+
+            mdlist = app.root.get_screen('menu').ids.diary_list
+            mdlist.clear_widgets()
+            month_number = strptime(f'{month}', '%b').tm_mon
+            currentYear = datetime.now().year
+
+            listitems = {}
+            for i in range(length):
+                listitems[i] = TwoLineListItem(text=f'{days[i]}.{month_number}.{currentYear}', secondary_text=titles[i],
+                                               secondary_theme_text_color='Primary',
+                                               theme_text_color='Secondary',
+                                               on_release=lambda x, i=i: self.update_diary(i, days, titles, content,
+                                                                                           month_number)
+                                               )
+
+                app.root.get_screen('menu').ids.diary_list.add_widget(listitems[i])
+
+    def update_diary(self, item, days, titles, content, month):
+
+        app = App.get_running_app()
+        currentYear = datetime.now().year
+        app.change_screen('diary')
+
+        app.root.get_screen('diary').ids.date.text = f'{days[item]}.{month}.{currentYear}'
+        app.root.get_screen('diary').ids.title.text = titles[item]
+        app.root.get_screen('diary').ids.content.text = content[item]
+
+    def delete_diary(self, day, month):
+
+        app = App.get_running_app()
+        app.change_screen('menu')
+        email = app.email
+
+        db.collection('diary').document(email).update({month + '.' + day: firestore.DELETE_FIELD})

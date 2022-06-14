@@ -78,7 +78,7 @@
 
             MDBoxLayout:
 
-                padding: [0, 0, 0, 0]
+                padding: [0, 30, 0, 0]
                 pos_hint: {"center_x": 1.05}
 
                 MDTextButton:
@@ -108,23 +108,18 @@
                     pos_hint: {'center_x': .5, 'top': .5}
 
 
-
-
-
-
-
         MDBoxLayout:
 
             adaptive_height: True
-            padding: [40, 0, 60, 10]
+            padding: [50, 0, 50, 10]
 
             Label:
 
-                text: "Don't have an account?"
+                text: "       Don't have an account?"
                 color: app.theme_cls.opposite_bg_normal
 
             MDTextButton:
-                text: "Sign up!"
+                text: "             Sign up!"
                 font_size: sp(15)
                 color: app.theme_cls.primary_color
                 on_release: root.manager.current = 'signup'

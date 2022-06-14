@@ -1,3 +1,4 @@
+
 <MenuScreen>:
 
     BoxLayout:
@@ -5,6 +6,8 @@
         orientation:'vertical'
 
         MDBottomNavigation:
+
+            font_name: 'Poppins'
 
             MDBottomNavigationItem:
 
@@ -15,65 +18,215 @@
                 MDBoxLayout:
 
                     orientation: 'vertical'
-                    padding: [20, 75, 20, 0]
+                    padding: [20, 60, 20, 0]
+                    spacing: 0
 
                     MDBoxLayout:
 
-                        padding: [0, 55, 0, 0]
-
                         MDCard:
-
                             orientation: "vertical"
                             radius: dp(25)
                             size_hint: None, None
-                            size: "280dp", "150dp"
-                            pos_hint: {"center_x": 0.5, "center_y": 0.8}
+                            size: "110dp", "110dp"
+                            pos_hint: {"center_x": 0.3, "center_y": 0.5}
+                            padding: [0, 0, 0, 5]
 
-                            FitImage:
-
-                                radius: [25, 25, 25, 25]
-                                source: "assets/stockphoto3.png"
-
-                    MDBoxLayout:
-
-                        padding: [80, 0, 0, 80]
-                        spacing: dp(20)
-
-                        MDLabel:
-                            id: today1
-                            text: "03"
-                            font_size: dp(40)
+                            Image:
+                                id: avatar1
+                                source: 'assets/animal_icons/cat.png'
+                                size_hint: None, None
+                                pos_hint: {'center_x': 0.5}
+                                size: 90, 90
 
                         MDBoxLayout:
 
+                            orientation: 'vertical'
+                            padding: [10, 30, 0, 35]
+
+                            MDLabel:
+                                id: today1
+                                text: "03"
+                                font_size: dp(40)
+
+
+                            AsyncImage:
+                                id: weather
+                                source: "assets/sun.rays.small.cloud.png"
+                                size_hint: None, None
+                                size: 50, 50
+
+                        MDBoxLayout:
+
+                            padding: [5, 35, 0, 35]
                             orientation: 'vertical'
 
                             MDLabel:
                                 id: today2
                                 text: "Friday\nJune 2022"
-                                pos_hint: {"center_x": -0.15}
+                                pos_hint: {"center_x": 0.15}
+
+                            MDLabel:
+                                id: temperature
+                                text: "37° C"
+                                pos_hint: {"center_x": .15}
+
+
+                    MDBoxLayout:
+                        size_hint_y: .75
+                        MDCard:
+
+                            radius: [25, 25, 25, 25]
+                            size_hint: None, None
+                            padding: [0, 0, 0, 0]
+                            size: "280", "100dp"
+                            pos_hint: {"center_x": 0.5, "top": 1}
+
+                            MDBoxLayout:
+
+                                padding: [20, 0, 20, 0]
+
+                                MDLabel:
+                                    id: welcome_label
+                                    text: "Welcome, Moritz!\nHow do you feel today?"
+                                    font_size: dp(20)
 
                     MDBoxLayout:
 
-                        padding: [0,0,0,100]
                         orientation: 'vertical'
-                        spacing: dp(50)
+                        padding: [0, 0, 0, 30]
 
-                        MDLabel:
+                        Carousel:
 
-                            id: welcome_label
-                            halign: 'center'
-                            text: ""
-                            font_size: dp(23)
-                            pos_y: 200
+                            MDGridLayout:
+                                rows: 1
+                                columns: 3
+                                spacing: 10
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    MDCard:
+                                        elevation: 0
+                                        id: emoji1
+                                        size_hint: None, None
+                                        size: 85, 80
+                                        radius: 10
+                                        padding: 7.5
+                                        ripple_behavior: True
+                                        on_release: app.change_card_color(1), app.my_firebase.update_mood(1), app.update_plot()
 
-                        MDRaisedButton:
-                            md_bg_color: app.theme_cls.primary_color
-                            text: "Start Daily Assessment"
-                            pos_y: 120
-                            pos_hint: {'center_x': .5}
-                            on_release:
-                                app.change_screen('questionnaire1')
+                                        Image:
+                                            source: 'assets/emojis/excellent.png'
+                                            size_hint: None, None
+                                            size: 70, 70
+                                            pos_hint: {'center_y': .5}
+                                    MDLabel:
+                                        text: "Excellent"
+                                        halign: 'center'
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    MDCard:
+                                        elevation: 0
+                                        id: emoji2
+                                        size_hint: None, None
+                                        size: 85, 80
+                                        radius: 10
+                                        padding: 7.5
+                                        ripple_behavior: True
+
+                                        on_release: app.change_card_color(2), app.my_firebase.update_mood(2), app.update_plot()
+                                        Image:
+                                            source: 'assets/emojis/veryhappy.png'
+                                            size_hint: None, None
+                                            size: 70, 70
+                                            pos_hint: {'center_y': .5}
+                                    MDLabel:
+                                        text: "Awesome"
+                                        halign: "center"
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    MDCard:
+                                        elevation: 0
+                                        id: emoji3
+                                        size_hint: None, None
+                                        size: 85, 80
+                                        radius: 10
+                                        padding: 7.5
+                                        ripple_behavior: True
+
+                                        on_release: app.change_card_color(3), app.my_firebase.update_mood(3), app.update_plot()
+                                        Image:
+                                            source: 'assets/emojis/happy.png'
+                                            size_hint: None, None
+                                            size: 70, 70
+                                            pos_hint: {'center_y': .5}
+                                    MDLabel:
+                                        text: "Happy"
+                                        halign: "center"
+                            MDGridLayout:
+                                rows: 1
+                                columns: 3
+                                spacing: 10
+
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    MDCard:
+                                        elevation: 0
+                                        id: emoji4
+                                        size_hint: None, None
+                                        size: 85, 80
+                                        padding: 7.5
+                                        radius: 10
+
+                                        ripple_behavior: True
+                                        on_release: app.change_card_color(4), app.my_firebase.update_mood(4), app.update_plot()
+
+                                        Image:
+                                            source: 'assets/emojis/neutral.png'
+                                            size_hint: None, None
+                                            size: 70, 70
+                                            pos_hint: {'center_y': .5}
+                                    MDLabel:
+                                        text: "Neutral"
+                                        halign: "center"
+
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    MDCard:
+                                        elevation: 0
+                                        id: emoji5
+                                        size_hint: None, None
+                                        size: 85, 80
+                                        radius: 10
+                                        padding: 7.5
+                                        ripple_behavior: True
+                                        on_release: app.change_card_color(5), app.my_firebase.update_mood(5), app.update_plot()
+                                        Image:
+                                            source: 'assets/emojis/sad.png'
+                                            size_hint: None, None
+                                            size: 70, 70
+                                            pos_hint: {'center_y': .5}
+                                    MDLabel:
+                                        text: "Sad"
+                                        halign: "center"
+
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+                                    MDCard:
+                                        elevation: 0
+                                        id: emoji6
+                                        size_hint: None, None
+                                        size: 85, 80
+                                        radius: 10
+                                        padding: 7.5
+                                        ripple_behavior: True
+                                        on_release: app.change_card_color(6), app.my_firebase.update_mood(6), app.update_plot()
+                                        Image:
+                                            source: 'assets/emojis/miserable.png'
+                                            size_hint: None, None
+                                            size: 70, 70
+                                            pos_hint: {'center_y': .5}
+                                    MDLabel:
+                                        text: "Miserable"
+                                        halign: "center"
 
                 MDNavigationLayout:
 
@@ -100,12 +253,20 @@
                             padding: dp(8)
                             orientation: 'vertical'
 
-                            Image:
+                            MDCard:
+                                orientation: "vertical"
+                                radius: dp(25)
+                                size_hint: None, None
+                                size: "110dp", "110dp"
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                padding: [0, 0, 0, 5]
 
-                                id: usericon
-                                size_hint_x: 1
-                                size_hint_y: 0.5
-                                source: 'assets/animal_icons/cat.png'
+                                Image:
+                                    id: avatar2
+                                    source: 'assets/animal_icons/cat.png'
+                                    size_hint: None, None
+                                    pos_hint: {'center_x': 0.5}
+                                    size: 90, 90
 
                             MDLabel:
                                 id: username
@@ -120,6 +281,11 @@
 
                                     text: "Theme"
                                     on_release: root.show_theme_picker()
+
+                                OneLineListItem:
+
+                                    text: "Avatar"
+                                    on_release: app.change_screen('avatar')
 
                                 OneLineListItem:
 
@@ -139,75 +305,70 @@
                 MDToolbar:
 
                     pos_hint: {"top": 1}
-                    title: "Create a Diary Entry"
-
-                MDBoxLayout:
-
-                    padding: [90, 0, 0, 300]
-
-                    MDLabel:
-
-                        id: today3
-                        text: "03"
-                        font_size: dp(40)
-
-                    MDBoxLayout:
-
-                        padding: [10, 0, 0, 0]
-                        orientation: 'vertical'
-
-                        MDLabel:
-
-                            id: today4
-                            text: "Friday\nJune 2022"
-                            pos_hint: {"center_x": -0.15}
-
-
-                MDBoxLayout:
-
-                    padding: [0,0,0,100]
-
-                    canvas:
-
-                        Color:
-
-                            rgba: app.theme_cls.primary_color
-
-                        Line:
-
-                            width: 2
-                            points: (20, 390, 300, 390) #x,y,angle,height
+                    title: "Write"
 
                 MDBoxLayout:
 
                     orientation: 'vertical'
-                    spacing: dp(10)
-                    padding: [20, 170, 20, 20]
+                    #spacing: dp(10)
+                    padding: [20, 80, 20, 20]
 
-                    MDTextFieldRect:
+                    MDLabel:
 
+                        text: ' Title'
+                        size_hint_y: 0.1
                         font_size: dp(20)
-                        size_hint_y: 0.2
-                        multiline: False
-                        hint_text: "Add a title"
-                        background_normal: 'assets/white.png'
-                        background_active: 'assets/white.png'
-
 
                     MDTextFieldRect:
 
-                        multiline: True
-                        hint_text: "Write Diary Entry here"
+                        font_size: dp(16)
+                        size_hint_y: 0.15
+                        multiline: False
+                        id: title
+                        hint_text: "Add a title to your story"
                         background_normal: 'assets/white.png'
                         background_active: 'assets/white.png'
 
-                    MDRaisedButton:
+                    MDLabel:
 
-                        text: "Save"
-                        font_size: 15
-                        pos_hint: {"center_x": 0.5}
-                        on_release: root.manager.current = 'menu'
-                        md_bg_color: app.theme_cls.primary_color
+                        text: ' Story'
+                        size_hint_y: 0.1
+                        font_size: dp(18)
+
+                    MDTextFieldRect:
+
+                        font_size: dp(16)
+                        multiline: True
+                        id: content
+                        hint_text: "Write something"
+                        background_normal: 'assets/white.png'
+                        background_active: 'assets/white.png'
+
+                    MDBoxLayout:
+
+                        size_hint_y: .15
+                        padding: [35, 0, 0, 0]
+                        spacing: 20
+
+                        MDFillRoundFlatIconButton:
+
+                            icon: 'backspace-outline'
+                            text: "Reset"
+                            font_size: 15
+                            size_hint_y: .75
+                            pos_hint: {'center_y': .5}
+                            on_release: app.clear_input()
+                            md_bg_color: app.theme_cls.primary_color
+
+                        MDFillRoundFlatIconButton:
+
+                            icon: 'content-save-outline'
+                            text: "Save"
+                            font_size: 15
+                            size_hint_y: .75
+                            pos_hint: {'center_y': .5}
+                            on_release: app.my_firebase.send_diary(title, content), app.my_firebase.refresh_diary(app.current_month_text_short)
+                            md_bg_color: app.theme_cls.primary_color
 
             MDBottomNavigationItem:
 
@@ -218,42 +379,211 @@
                 MDToolbar:
 
                     pos_hint: {"top": 1}
-                    title: "View Old Entries"
+                    title: "Archive"
 
                 MDBoxLayout:
 
-                    padding: [20, 0, 20, 0]
+                    padding: [20, 85, 20, 0]
                     orientation: 'vertical'
 
                     MDBoxLayout:
+                        size_hint_y: .175
+                        Carousel:
 
-                        padding: [40, 0, 40, 0]
-                        spacing: dp(5)
+                            id: carousel
+                            MDGridLayout:
+                                cols: 4
+                                rows: 1
+                                spacing: 10,
+                                size_hint_y:.25
+                                pos_hint: {'center_y': .85}
+                                MDCard:
+                                    id: carousel1
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius: 10
+                                    padding: 7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(1), app.my_firebase.refresh_diary('Jan')
+                                    MDLabel:
+
+                                        text: 'Jan'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel2
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(2), app.my_firebase.refresh_diary('Feb')
+                                    MDLabel:
+                                        text: 'Feb'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel3
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(3), app.my_firebase.refresh_diary('Mar')
+                                    MDLabel:
+                                        text: 'Mar'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel4
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(4), app.my_firebase.refresh_diary('Apr')
+                                    MDLabel:
+                                        text: 'Apr'
+                                        halign: 'center'
+                            MDGridLayout:
+                                cols: 4
+                                rows: 1
+                                spacing: 10,
+                                size_hint_y:.25
+                                pos_hint: {'center_y': .85}
+                                MDCard:
+                                    id: carousel5
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(5), app.my_firebase.refresh_diary('May')
+                                    MDLabel:
+                                        text: 'May'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel6
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(6), app.my_firebase.refresh_diary('Jun')
+                                    MDLabel:
+                                        text: 'Jun'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel7
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(7), app.my_firebase.refresh_diary('Jul')
+                                    MDLabel:
+                                        text: 'Jul'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel8
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(8), app.my_firebase.refresh_diary('Aug')
+                                    MDLabel:
+                                        text: 'Aug'
+                                        halign: 'center'
+                            MDGridLayout:
+                                cols: 4
+                                rows: 1
+                                spacing: 10,
+                                size_hint_y:.25
+                                pos_hint: {'center_y': .85}
+                                MDCard:
+                                    id: carousel9
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(9), app.my_firebase.refresh_diary('Sep')
+                                    MDLabel:
+                                        text: 'Sep'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel10
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(10), app.my_firebase.refresh_diary('Oct')
+                                    MDLabel:
+                                        text: 'Oct'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel11
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(11), app.my_firebase.refresh_diary('Nov')
+                                    MDLabel:
+                                        text: 'Nov'
+                                        halign: 'center'
+                                MDCard:
+                                    id: carousel12
+                                    elevation:0
+                                    size_hint:(None, None)
+                                    size: 60, 60
+                                    radius:10
+                                    padding:7.5
+                                    ripple_behavior:True
+                                    md_bg_color:self.theme_cls.primary_light
+                                    on_release: app.change_card_color_carousel(12), app.my_firebase.refresh_diary('Dec')
+                                    MDLabel:
+                                        text: 'Dec'
+                                        halign: 'center'
+
+
+
+                    MDBoxLayout:
+
+                        orientation: 'vertical'
 
                         MDLabel:
+                            text: 'Recent Entries'
+                            font_size: dp(20)
+                            size_hint_y: .3
 
-                            id: today5
-                            text: "June"
-                            font_size: dp(30)
+                        ScrollView:
 
-                        MDLabel:
-
-                            id: today6
-                            text: "2022"
-                            text_color: 0, 0, 0, 0.5
-                            font_size: dp(30)
-
-
-                        MDIconButton:
-                            pos_hint: {'center_y': 0.5}
-                            icon: 'arrow-down-drop-circle'
-                            on_release: root.show_akdate_picker()
-
-                    ScrollView:
-                        MDList:
-                            id: diary_list
-                            OneLineListItem:
-                                text: "hi"
+                            MDList:
+                                id: diary_list
+                                radius: dp(25)
+                                spacing: 5
 
 
 
@@ -268,12 +598,75 @@
                     pos_hint: {"top": 1}
                     title: "Monthly Mood Chart"
 
+
+
                 MDBoxLayout:
-                    id: box
 
 
+                    orientation: 'vertical'
+                    padding: [0, 130, 0, 0]
+                    MDBoxLayout:
+                        size_hint_y: .35
+                        padding: [20, 0, 20, 0]
+
+                        MDCard:
+                            elevation: 0.025
+                            orientation: "vertical"
+                            radius: dp(25)
+                            size_hint: None, None
+                            size: "280dp", "150dp"
+                            pos_hint: {"center_x": 0.5, "center_y": 0.8}
+                            FitImage:
+                                radius: [25, 25, 25, 25]
+                                source: "assets/stockphoto3.jpg"
+
+                    MDBoxLayout:
+                        id: parent_box
+
+                        MDBoxLayout:
+                            id: box
 
 
+                MDLabel:
+
+                    id: moodchart_month
+                    text: "2022 June"
+                    font_size: dp(25)
+                    halign: 'center'
+                    pos_hint: {'center_y': .53}
+
+                FloatLayout:
+                    size_hint_x: .1
+                    MDBoxLayout:
+
+                        spacing: 10
+                        padding: [10, 5, 0, 35]
+                        orientation: 'vertical'
+                        size_hint_x: .1
+                        Image:
+                            source: 'assets/emojis/excellent.png'
+                            size_hint: None, None
+                            size: 30, 30
+                        Image:
+                            source: 'assets/emojis/veryhappy.png'
+                            size_hint: None, None
+                            size: 30, 30
+                        Image:
+                            source: 'assets/emojis/happy.png'
+                            size_hint: None, None
+                            size: 30, 30
+                        Image:
+                            source: 'assets/emojis/neutral.png'
+                            size_hint: None, None
+                            size: 30, 30
+                        Image:
+                            source: 'assets/emojis/sad.png'
+                            size_hint: None, None
+                            size: 30, 30
+                        Image:
+                            source: 'assets/emojis/miserable.png'
+                            size_hint: None, None
+                            size: 30, 30
 
 
 

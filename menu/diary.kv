@@ -1,0 +1,66 @@
+<DiaryScreen>:
+
+    MDToolbar:
+        pos_hint: {"top": 1}
+        title: "Diary"
+        left_action_items: [['arrow-left', lambda x: app.change_screen('menu')]]
+
+    MDBoxLayout:
+
+        orientation: 'vertical'
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: [20, 80, 20, 0]
+            size_hint_y: .75
+            MDLabel:
+                id: date
+                text: 'Friday, 13. March 2022'
+                font_size: dp(13)
+                size_hint_y: .1
+
+            MDLabel:
+                id: title
+                text: 'Full-Day Hike with Work group'
+                font_size: dp(18)
+                size_hint_y: .1
+
+            ScrollView:
+
+                do_scroll_y: True
+                do_scroll_x: False
+
+                MDLabel:
+
+                    id: content
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    text: ""
+                    font_size: dp(13)
+
+
+
+        MDBoxLayout:
+
+            size_hint_y: .3
+            padding: [20, 10, 20, 20]
+            orientation: 'vertical'
+            spacing: 20
+
+
+            MDCard:
+
+                orientation: "vertical"
+                radius: dp(25)
+                size_hint: None, None
+                size: "280dp", "140dp"
+                pos_hint: {"center_x": 0.5, "center_y": 1.2}
+                FitImage:
+                    radius: [25, 25, 25, 25]
+                    source: "assets/stockphoto2.jpg"
+
+    MDIconButton:
+
+        icon: 'delete-outline'
+        pos_hint: {'center_x': .85, 'center_y': .825}
+        on_release: app.confirm_delete_dialog()
