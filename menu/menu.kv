@@ -51,7 +51,7 @@
 
                             AsyncImage:
                                 id: weather
-                                source: "assets/sun.rays.small.cloud.png"
+                                source: "assets/background_images/sun.rays.small.cloud.png"
                                 size_hint: None, None
                                 size: 50, 50
 
@@ -111,7 +111,7 @@
                                         radius: 10
                                         padding: 7.5
                                         ripple_behavior: True
-                                        on_release: app.change_card_color(1), app.my_firebase.update_mood(1), app.update_plot()
+                                        on_release: app.change_card_color(1), app.my_firestore.update_mood(1), app.update_plot()
 
                                         Image:
                                             source: 'assets/emojis/excellent.png'
@@ -132,7 +132,7 @@
                                         padding: 7.5
                                         ripple_behavior: True
 
-                                        on_release: app.change_card_color(2), app.my_firebase.update_mood(2), app.update_plot()
+                                        on_release: app.change_card_color(2), app.my_firestore.update_mood(2), app.update_plot()
                                         Image:
                                             source: 'assets/emojis/veryhappy.png'
                                             size_hint: None, None
@@ -152,7 +152,7 @@
                                         padding: 7.5
                                         ripple_behavior: True
 
-                                        on_release: app.change_card_color(3), app.my_firebase.update_mood(3), app.update_plot()
+                                        on_release: app.change_card_color(3), app.my_firestore.update_mood(3), app.update_plot()
                                         Image:
                                             source: 'assets/emojis/happy.png'
                                             size_hint: None, None
@@ -177,7 +177,7 @@
                                         radius: 10
 
                                         ripple_behavior: True
-                                        on_release: app.change_card_color(4), app.my_firebase.update_mood(4), app.update_plot()
+                                        on_release: app.change_card_color(4), app.my_firestore.update_mood(4), app.update_plot()
 
                                         Image:
                                             source: 'assets/emojis/neutral.png'
@@ -198,7 +198,7 @@
                                         radius: 10
                                         padding: 7.5
                                         ripple_behavior: True
-                                        on_release: app.change_card_color(5), app.my_firebase.update_mood(5), app.update_plot()
+                                        on_release: app.change_card_color(5), app.my_firestore.update_mood(5), app.update_plot()
                                         Image:
                                             source: 'assets/emojis/sad.png'
                                             size_hint: None, None
@@ -218,7 +218,7 @@
                                         radius: 10
                                         padding: 7.5
                                         ripple_behavior: True
-                                        on_release: app.change_card_color(6), app.my_firebase.update_mood(6), app.update_plot()
+                                        on_release: app.change_card_color(6), app.my_firestore.update_mood(6), app.update_plot()
                                         Image:
                                             source: 'assets/emojis/miserable.png'
                                             size_hint: None, None
@@ -326,8 +326,8 @@
                         multiline: False
                         id: title
                         hint_text: "Add a title to your story"
-                        background_normal: 'assets/white.png'
-                        background_active: 'assets/white.png'
+                        background_normal: 'assets/background_images/white.png'
+                        background_active: 'assets/background_images/white.png'
 
                     MDLabel:
 
@@ -341,8 +341,8 @@
                         multiline: True
                         id: content
                         hint_text: "Write something"
-                        background_normal: 'assets/white.png'
-                        background_active: 'assets/white.png'
+                        background_normal: 'assets/background_images/white.png'
+                        background_active: 'assets/background_images/white.png'
 
                     MDBoxLayout:
 
@@ -367,7 +367,7 @@
                             font_size: 15
                             size_hint_y: .75
                             pos_hint: {'center_y': .5}
-                            on_release: app.my_firebase.send_diary(title, content), app.my_firebase.refresh_diary(app.current_month_text_short)
+                            on_release: app.my_firestore.send_diary(title, content), app.my_firestore.refresh_diary(app.current_month_text_short)
                             md_bg_color: app.theme_cls.primary_color
 
             MDBottomNavigationItem:
@@ -406,7 +406,7 @@
                                     padding: 7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(1), app.my_firebase.refresh_diary('Jan')
+                                    on_release: app.change_card_color_carousel(1), app.my_firestore.refresh_diary('Jan')
                                     MDLabel:
 
                                         text: 'Jan'
@@ -420,7 +420,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(2), app.my_firebase.refresh_diary('Feb')
+                                    on_release: app.change_card_color_carousel(2), app.my_firestore.refresh_diary('Feb')
                                     MDLabel:
                                         text: 'Feb'
                                         halign: 'center'
@@ -433,7 +433,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(3), app.my_firebase.refresh_diary('Mar')
+                                    on_release: app.change_card_color_carousel(3), app.my_firestore.refresh_diary('Mar')
                                     MDLabel:
                                         text: 'Mar'
                                         halign: 'center'
@@ -446,7 +446,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(4), app.my_firebase.refresh_diary('Apr')
+                                    on_release: app.change_card_color_carousel(4), app.my_firestore.refresh_diary('Apr')
                                     MDLabel:
                                         text: 'Apr'
                                         halign: 'center'
@@ -465,7 +465,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(5), app.my_firebase.refresh_diary('May')
+                                    on_release: app.change_card_color_carousel(5), app.my_firestore.refresh_diary('May')
                                     MDLabel:
                                         text: 'May'
                                         halign: 'center'
@@ -478,7 +478,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(6), app.my_firebase.refresh_diary('Jun')
+                                    on_release: app.change_card_color_carousel(6), app.my_firestore.refresh_diary('Jun')
                                     MDLabel:
                                         text: 'Jun'
                                         halign: 'center'
@@ -491,7 +491,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(7), app.my_firebase.refresh_diary('Jul')
+                                    on_release: app.change_card_color_carousel(7), app.my_firestore.refresh_diary('Jul')
                                     MDLabel:
                                         text: 'Jul'
                                         halign: 'center'
@@ -504,7 +504,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(8), app.my_firebase.refresh_diary('Aug')
+                                    on_release: app.change_card_color_carousel(8), app.my_firestore.refresh_diary('Aug')
                                     MDLabel:
                                         text: 'Aug'
                                         halign: 'center'
@@ -523,7 +523,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(9), app.my_firebase.refresh_diary('Sep')
+                                    on_release: app.change_card_color_carousel(9), app.my_firestore.refresh_diary('Sep')
                                     MDLabel:
                                         text: 'Sep'
                                         halign: 'center'
@@ -536,7 +536,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(10), app.my_firebase.refresh_diary('Oct')
+                                    on_release: app.change_card_color_carousel(10), app.my_firestore.refresh_diary('Oct')
                                     MDLabel:
                                         text: 'Oct'
                                         halign: 'center'
@@ -549,7 +549,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(11), app.my_firebase.refresh_diary('Nov')
+                                    on_release: app.change_card_color_carousel(11), app.my_firestore.refresh_diary('Nov')
                                     MDLabel:
                                         text: 'Nov'
                                         halign: 'center'
@@ -562,7 +562,7 @@
                                     padding:7.5
                                     ripple_behavior:True
                                     md_bg_color:self.theme_cls.primary_light
-                                    on_release: app.change_card_color_carousel(12), app.my_firebase.refresh_diary('Dec')
+                                    on_release: app.change_card_color_carousel(12), app.my_firestore.refresh_diary('Dec')
                                     MDLabel:
                                         text: 'Dec'
                                         halign: 'center'
@@ -618,7 +618,7 @@
                             pos_hint: {"center_x": 0.5, "center_y": 0.8}
                             FitImage:
                                 radius: [25, 25, 25, 25]
-                                source: "assets/stockphoto3.jpg"
+                                source: "assets/background_images/stockphoto3.jpg"
 
                     MDBoxLayout:
                         id: parent_box

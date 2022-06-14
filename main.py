@@ -1,25 +1,29 @@
-import json
-import calendar
-from datetime import datetime
-from time import strptime
-from kivymd.uix.list import TwoLineListItem
-import numpy as np
-import requests
+# kivy imports
 from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen, ScreenManager, NoTransition, SlideTransition
 from kivymd.app import MDApp
 from kivymd.theming import ThemeManager
-import matplotlib.pyplot as plt
+from kivymd.uix.list import TwoLineListItem
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from backend_kivy.backend_kivyagg import FigureCanvasKivyAgg
 from kivy.core.text import LabelBase
 
-# modules
-from menu.menu import MenuScreen
+# other modules
+import json
+import calendar
+from datetime import datetime
+from time import strptime
+import numpy as np
+import requests
+import matplotlib.pyplot as plt
+
+# own modules
+from menu.myfirestore import MyFirestore, MenuScreen
 from authentication.myfirebase import MyFirebase, LogInScreen, SignUpScreen
 
 
+# classes
 class DiaryScreen(Screen):
     pass
 
@@ -28,12 +32,16 @@ class AvatarScreen(Screen):
     pass
 
 
-# main application class
-
 class MainApp(MDApp):
+
+    """
+    The main app class. This class is the base for creating Kivy applications and inherits from the MDApp class to make
+    an own app.
+    """
 
     def __init__(self, **kwargs):
 
+        self.sm = None
         self.dialog = None
         self.current_month_text_short = None
         self.box = None
@@ -43,17 +51,24 @@ class MainApp(MDApp):
         self.id_token = None
         self.title = "TB2"
 
-        # Setting theme properties
-
+        # Setting theme properties through the theme manager
         self.theme_cls = ThemeManager()
 
         # init firebase
-
         self.my_firebase = MyFirebase()
+
+        # init firestore
+        self.my_firestore = MyFirestore()
 
         super().__init__(**kwargs)
 
     def build(self):
+
+        """
+        Initializes the application and will be called only once.
+
+        :return: Returns the screen-manager.
+        """
 
         # change app icon
         self.icon = 'assets/mental-icon-2.jpg'
@@ -74,6 +89,11 @@ class MainApp(MDApp):
         return self.sm
 
     def on_start(self):
+
+        """
+        Event handler for the on_start event which is fired after initialization (after build() has been called) but
+        before the application has started running
+        """
 
         # get weather report and update labels in menu screen
         self.show_weather()
@@ -108,7 +128,8 @@ class MainApp(MDApp):
         try:
             # try to read persistent sign in credentials
 
-            with open("refresh_token.txt", 'r') as f:
+            with open("credentials/refresh_token.txt", 'r') as f:
+
                 refresh_token = f.read()
 
             # use refresh_token to get a new idToken
@@ -125,6 +146,7 @@ class MainApp(MDApp):
             # display username in menu screen
 
             with open("credentials/username.txt", 'r') as f:
+
                 username = f.read()
                 self.root.get_screen('menu').ids.welcome_label.text = f"Hey {username}, how do you feel today?"
                 self.username = username
@@ -141,37 +163,50 @@ class MainApp(MDApp):
             self.sm.transition = SlideTransition()
 
         except Exception as e:
+
             print(e)
 
         try:
+
             # try to plot mood chart if there is data in database
             self.add_plot()
+
         except Exception as e:
+
             print(e)
 
         try:
+
             # try to add list items to timeline MDList if diary entries exist
-            length, titles, days, content = self.my_firebase.get_diary(self.current_month_text_short)
+            length, titles, days, content = self.my_firestore.get_diary(self.current_month_text_short)
             month_number = strptime(f'{self.current_month_text_short}', '%b').tm_mon
 
             listitems = {}
+
             for i in range(length):
+
                 listitems[i] = TwoLineListItem(text=f'{days[i]}.{month_number}.{currentYear}', secondary_text=titles[i],
                                                secondary_theme_text_color='Primary',
                                                theme_text_color='Secondary',
-                                               on_release=lambda x, i=i: self.my_firebase.update_diary(i, days, titles,
-                                                                                                       content,
-                                                                                                       month_number)
+                                               on_release=lambda x, i=i: self.my_firestore.update_diary(i, days, titles,
+                                                                                                        content,
+                                                                                                        month_number)
                                                )
 
                 self.root.get_screen('menu').ids.diary_list.add_widget(listitems[i])
 
         except Exception as e:
+
             print(e)
 
     def change_card_color_carousel(self, card_number):
 
-        """Function that changes card color of carousel card when card is clicked."""
+        """
+        Function that changes card color of carousel card when card is clicked.
+
+        :param card_number: The id of the card.
+        """
+
         for i in range(1, 12):
             card = "carousel" + str(i)
             self.root.get_screen("menu").ids[card].md_bg_color = self.theme_cls.primary_light
@@ -180,7 +215,9 @@ class MainApp(MDApp):
 
     def spinner_toggle(self):
 
-        """Function that toggles spinner to active/inactive"""
+        """
+        Function that toggles spinner to active/inactive.
+        """
 
         if not self.root.get_screen('signup').ids.spinner.active:
             self.root.get_screen('signup').ids.spinner.active = True
@@ -189,13 +226,17 @@ class MainApp(MDApp):
 
     def change_screen(self, screen):
 
-        """Function that changes to specified screen """
+        """
+        Function that changes to specified screen.
+        """
 
         self.sm.current = screen
 
     def update_plot(self):
 
-        """Function that clears plot widget, clears plot data and then creates a new plot with updated data."""
+        """
+        Function that clears plot widget, clears plot data and then creates a new plot with updated data.
+        """
 
         box = self.root.get_screen('menu').ids.box
         box.clear_widgets()
@@ -204,12 +245,12 @@ class MainApp(MDApp):
 
     def add_plot(self):
 
-        """Function that creates a plot that shows the mood progression of the user."""
-
-
+        """
+        Function that creates a plot that shows the mood progression of the user.
+        """
 
         # dataset
-        df = self.my_firebase.update_plot()
+        df = self.my_firestore.update_plot()
 
         # convert x values to int
         df['x'] = df['x'].astype(int)
@@ -228,8 +269,8 @@ class MainApp(MDApp):
         ax.axhspan(1, 2, facecolor='red', alpha=0.5)
         ax.axhspan(2, 3, facecolor='red', alpha=0.3)
         ax.axhspan(3, 4, facecolor='yellow', alpha=0.3)
-        ax.axhspan(4, 5, facecolor='green', alpha=0.3)
-        ax.axhspan(5, 6, facecolor='green', alpha=0.5)
+        ax.axhspan(4, 5, facecolor='green', alpha=0.25)
+        ax.axhspan(5, 6, facecolor='green', alpha=0.35)
 
         # Plot Graph
         plt.plot(x, y, color='black', linestyle='solid')
@@ -245,7 +286,7 @@ class MainApp(MDApp):
         # set ticks for y axis
         plt.yticks(np.arange(1, 7))
         # set ticks for x axis
-        x_ticks = np.arange(1, days+1, 4).tolist()
+        x_ticks = np.arange(1, days + 1, 4).tolist()
         x_ticks.remove(29)
         x_ticks.append(days)
         plt.xticks(x_ticks)
@@ -257,7 +298,11 @@ class MainApp(MDApp):
 
     def change_card_color(self, card_number):
 
-        """Function that changes card color of horizontal sliding cards in menu screen"""
+        """
+        Function that changes card color of horizontal sliding cards in menu screen.
+
+        :param card_number: The id of the card.
+        """
 
         for i in range(1, 7):
             card = "emoji" + str(i)
@@ -267,7 +312,11 @@ class MainApp(MDApp):
 
     def change_avatar_card_color(self, card_number):
 
-        """Function that changes card color of cards in avatar screen"""
+        """
+        Function that changes card color of cards in avatar screen.
+
+        :param card_number: The id of the card.
+        """
 
         for i in range(1, 10):
             card = "card" + str(i)
@@ -277,7 +326,9 @@ class MainApp(MDApp):
 
     def change_avatar(self):
 
-        """Function that changes the avatar when user clicks submit in avatar screen"""
+        """
+        Function that changes the avatar when user clicks submit in avatar screen.
+        """
 
         for i in range(1, 10):
             card = "card" + str(i)
@@ -289,11 +340,22 @@ class MainApp(MDApp):
         self.change_screen('menu')
 
     def clear_input(self):
-        """Function that clears title and content field of diary when user presses reset button"""
+
+        """
+        Function that clears title and content field of diary when user presses reset button.
+        """
+
         self.root.get_screen('menu').ids.title.text = ""
         self.root.get_screen('menu').ids.content.text = ""
 
     def format_date_month(self, date):
+
+        """
+        A function that formats the date in the diary screen and returns the month.
+
+        :param date: Unformatted date.
+        :return: The month in short text form (e.g. 'Jun').
+        """
         month_number = date.split('.')[1]
         datetime_object = datetime.strptime(month_number, "%m")
         month_name = datetime_object.strftime("%b")
@@ -301,11 +363,23 @@ class MainApp(MDApp):
         return month_name
 
     def format_date_day(self, date):
+
+        """
+        A function that formats the date in the diary screen and returns the day of the month.
+
+        :param date: Unformatted date.
+        :return: The day of the month as a number.
+        """
+
         day = date.split('.')[0]
-        print(day)
+
         return day
 
     def confirm_delete_dialog(self):
+
+        """
+        Function that displays the confirme delete dialog of the diary screen.
+        """
 
         if not self.dialog:
             self.dialog = MDDialog(
@@ -329,15 +403,31 @@ class MainApp(MDApp):
         self.dialog.open()
 
     def confirm_delete(self, obj):
+
+        """
+        Function that deletes and refreshes the diary when user confirms the deletion.
+
+        :param obj: Not used.
+        """
         date = self.root.get_screen('diary').ids.date.text
-        self.my_firebase.delete_diary(self.format_date_day(date), self.format_date_month(date))
-        self.my_firebase.refresh_diary(self.format_date_month(date))
+        self.my_firestore.delete_diary(self.format_date_day(date), self.format_date_month(date))
+        self.my_firestore.refresh_diary(self.format_date_month(date))
         self.dialog.dismiss()
 
     def close_dialog(self, obj):
+
+        """
+        Function that closes the confirm delete dialog of the diary screen.
+
+        :param obj: Not used.
+        """
         self.dialog.dismiss()
 
     def show_weather(self):
+
+        """
+        A function that gets the openweathermap data of the current day and displays the data in the home screen.
+        """
 
         base_url = "https://api.openweathermap.org/data/2.5/weather?"
         apikey = "facc8b8a55bf0bffec4fdce03dc17d12"
@@ -360,7 +450,6 @@ class MainApp(MDApp):
 
 
 # driver code
-
 if __name__ == "__main__":
     LabelBase.register(name='Roboto',
                        fn_regular='assets/Poppins/Poppins-Light.ttf',
