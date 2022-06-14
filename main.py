@@ -47,6 +47,8 @@ class MainApp(MDApp):
 
         self.theme_cls = ThemeManager()
 
+        # init firebase
+
         self.my_firebase = MyFirebase()
 
         super().__init__(**kwargs)
