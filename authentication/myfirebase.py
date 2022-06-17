@@ -191,7 +191,7 @@ class MyFirebase:
 
         app = App.get_running_app()
 
-        with open("refresh_token.txt", "w") as f:
+        with open("credentials/refresh_token.txt", "w") as f:
             f.write("")
 
         app.change_screen('login')
