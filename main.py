@@ -359,7 +359,7 @@ class MainApp(MDApp):
         month_number = date.split('.')[1]
         datetime_object = datetime.strptime(month_number, "%m")
         month_name = datetime_object.strftime("%b")
-        print(month_name)
+
         return month_name
 
     def format_date_day(self, date):
