@@ -85,20 +85,12 @@
                 spacing: dp(30)
                 orientation: 'vertical'
 
-                MDSpinner:
-                    id: spinner
-                    active: False
-                    size_hint: None, None
-                    size: dp(46), dp(46)
-                    pos_hint: {'center_x': 0.5, 'center_y': 1}
-
                 MDFillRoundFlatButton:
 
                     text: "Continue"
                     font_size: 15
                     pos_hint: {"center_x": 0.5}
                     on_release:
-                        spinner.active = True
                         app.my_firebase.sign_up(email.text, username.text, password1.text, password2.text)
 
 

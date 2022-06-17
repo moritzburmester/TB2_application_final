@@ -85,8 +85,6 @@ class MyFirebase:
 
                 # change screen to login if successful
                 app.change_screen('login')
-                # stop spinner
-                app.spinner_toggle()
                 self.snackbar_show(self.signup_success)
 
                 # write username to local file
@@ -107,12 +105,12 @@ class MyFirebase:
 
                 # invalid email or password not safe enough
                 self.snackbar_show(self.failure)
-                app.spinner_toggle()
+
         else:
 
             # passwords don't match
             self.snackbar_show(self.failure)
-            app.spinner_toggle()
+
 
     def sign_in(self, email, password):
 
@@ -140,18 +138,37 @@ class MyFirebase:
                 f.write(refresh_token)
 
             app.change_screen('menu')
-            app.spinner_toggle
             self.snackbar_show(self.signin_success)
 
             # save email to mainappclass variable
+            with open("credentials/email.txt", "w") as f:
+                f.write(email)
             with open("credentials/email.txt", "r") as f:
                 app.email = f.read()
-            # change label in menu screen to username
+
+            # change label and avatar in menu screen to username and user avatar
+            get_request = requests.get(
+                "https://techbasics2assignment-default-rtdb.europe-west1.firebasedatabase.app/" + localId +
+                ".json?auth=" + idToken)
+
+            if get_request.ok:
+                username = get_request.json()["username"]
+                avatar = get_request.json()["avatar"]
+
+            with open("credentials/username.txt", "w") as f:
+                f.write(username)
+
+            with open("credentials/avatar.txt", "w") as f:
+                f.write(avatar)
+
             with open("credentials/username.txt", "r") as f:
                 username = f.read()
-            app.root.get_screen('menu').ids.welcome_label.text = f"Hey {username}, how do you feel today?"
 
-            # set menu label to display correct username
+            with open("credentials/avatar.txt", "r") as f:
+                avatar = f.read()
+
+            app.root.get_screen("menu").ids.avatar1.source = avatar
+            app.root.get_screen("menu").ids.avatar2.source = avatar
             app.root.get_screen("menu").ids.welcome_label.text = "Welcome, " + username + "!\nHow do you feel today?"
             app.root.get_screen("menu").ids.username.text = "          " + username
 
@@ -163,7 +180,7 @@ class MyFirebase:
 
             # invalid password/email
             self.snackbar_show(self.failure)
-            app.spinner_toggle()
+
 
     def exchange_refresh_token(self, refresh_token):
 
@@ -208,6 +225,9 @@ class MyFirebase:
         my_data = {"avatar": avatar}
         localId = app.local_id
         idToken = app.id_token
+
+        with open("credentials/avatar.txt", "w") as f:
+            f.write(avatar)
 
         patch_request = requests.patch(
             "https://techbasics2assignment-default-rtdb.europe-west1.firebasedatabase.app/" + localId +

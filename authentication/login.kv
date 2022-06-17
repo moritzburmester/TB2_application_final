@@ -94,19 +94,7 @@
                 font_size: 15
                 pos_hint: {"center_x": 0.5}
                 on_release:
-                    app.spinner_toggle()
                     app.my_firebase.sign_in(email.text, password.text)
-
-            FloatLayout:
-
-                MDSpinner:
-
-                    id: spinner
-                    active: False
-                    size_hint: None, None
-                    size: dp(46), dp(46)
-                    pos_hint: {'center_x': .5, 'top': .5}
-
 
         MDBoxLayout:
 

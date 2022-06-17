@@ -92,7 +92,7 @@ class MainApp(MDApp):
 
         """
         Event handler for the on_start event which is fired after initialization (after build() has been called) but
-        before the application has started running
+        before the application has started running.
         """
 
         # get weather report and update labels in menu screen
@@ -146,11 +146,17 @@ class MainApp(MDApp):
             # display username in menu screen
 
             with open("credentials/username.txt", 'r') as f:
-
                 username = f.read()
                 self.root.get_screen('menu').ids.welcome_label.text = f"Hey {username}, how do you feel today?"
                 self.username = username
                 self.root.get_screen("menu").ids.username.text = "          " + username
+
+            # display avatar choice
+
+            with open("credentials/avatar.txt", "r") as f:
+                avatar = f.read()
+                self.root.get_screen("menu").ids.avatar1.source = avatar
+                self.root.get_screen("menu").ids.avatar2.source = avatar
 
             # get email from user
 
@@ -212,17 +218,6 @@ class MainApp(MDApp):
             self.root.get_screen("menu").ids[card].md_bg_color = self.theme_cls.primary_light
         card = "carousel" + str(card_number)
         self.root.get_screen("menu").ids[card].md_bg_color = self.theme_cls.primary_dark
-
-    def spinner_toggle(self):
-
-        """
-        Function that toggles spinner to active/inactive.
-        """
-
-        if not self.root.get_screen('signup').ids.spinner.active:
-            self.root.get_screen('signup').ids.spinner.active = True
-        else:
-            self.root.get_screen('signup').ids.spinner.active = False
 
     def change_screen(self, screen):
 
