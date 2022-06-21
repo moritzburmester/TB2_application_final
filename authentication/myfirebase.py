@@ -1,4 +1,6 @@
 # kivy imports
+from datetime import datetime
+
 from kivy.core.window import Window
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -167,6 +169,10 @@ class MyFirebase:
             with open("credentials/avatar.txt", "r") as f:
                 avatar = f.read()
 
+            # updating the app
+            current_month_text_short = datetime.now().strftime('%h')
+            app.my_firestore.refresh_diary(current_month_text_short)
+            app.update_plot()
             app.root.get_screen("menu").ids.avatar1.source = avatar
             app.root.get_screen("menu").ids.avatar2.source = avatar
             app.root.get_screen("menu").ids.welcome_label.text = "Welcome, " + username + "!\nHow do you feel today?"
@@ -210,6 +216,15 @@ class MyFirebase:
 
         with open("credentials/refresh_token.txt", "w") as f:
             f.write("")
+        with open("credentials/email.txt", "w") as f:
+            f.write("")
+        with open("credentials/avatar.txt", "w") as f:
+            f.write("")
+        with open("credentials/username.txt", "w") as f:
+            f.write("")
+
+        mdlist = app.root.get_screen('menu').ids.diary_list
+        mdlist.clear_widgets()
 
         app.change_screen('login')
 
