@@ -172,7 +172,12 @@ class MyFirebase:
             # updating the app
             current_month_text_short = datetime.now().strftime('%h')
             app.my_firestore.refresh_diary(current_month_text_short)
-            app.update_plot()
+            try:
+                app.update_plot()
+            except Exception as e:
+                print(e)
+
+
             app.root.get_screen("menu").ids.avatar1.source = avatar
             app.root.get_screen("menu").ids.avatar2.source = avatar
             app.root.get_screen("menu").ids.welcome_label.text = "Welcome, " + username + "!\nHow do you feel today?"
