@@ -71,7 +71,7 @@ class MainApp(MDApp):
         """
 
         # change app icon
-        self.icon = 'assets/mental-icon-2.jpg'
+        self.icon = 'assets/background_images/mental-icon-2.jpg'
 
         # Set window size to average phone screen height and width
         Window.size = (320, 600)
